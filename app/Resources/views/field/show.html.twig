@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{% trans_default_domain "dashboard" %}
+<div class="be-wrapper">
+    {% include 'navbar.html.twig' %} 
+    {% include 'sidebar.html.twig' %}
+
+    <div class="be-content">
+        <div class="page-head">
+            <h2 class="page-head-title">{% trans %}Farm Details{% endtrans %}</h2>
+        </div>
+        <div class="main-content container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            {{ form_start(form) }}
+                                {{ form_errors(form) }}
+                                <div class="form-group">
+                                    {{ form_label(form.name, 'Name (0/50 chars)', {'label_attr': {'id': 'label_field_name'}}) }}
+                                    {{ form_errors(form.name) }}
+                                    {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6">
+                                            {{ form_label(form.lat, 'Latitude') }}
+                                            {{ form_errors(form.lat) }}
+                                            {{ form_widget(form.lat, {'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                        <div class="col-sm-6 col-md-6">
+                                            {{ form_label(form.lng, 'Longitude') }}
+                                            {{ form_errors(form.lng) }}
+                                            {{ form_widget(form.lng, {'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    {{ form_label(form.description) }}
+                                    {{ form_errors(form.description) }}
+                                    {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form_label(form.imageFile) }}
+                                    {{ form_errors(form.imageFile) }}
+                                    {{ form_widget(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 text-center">
+                                        {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary btn-lg'}}) }}
+                                        <a href="{{ path('fields') }}" class="btn btn-default btn-lg">{% trans %}Cancel{% endtrans %}</a>
+                                    </div>
+                                </div>
+                            {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div id="map" data-lat="{{ lat }}" data-lng="{{ lng }}" style="height: 452px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'right-sidebar.html.twig' %}
+</div>
+{% endblock %}

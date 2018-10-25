@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{% trans_default_domain "dashboard" %}
+<div class="be-wrapper">
+    {% include 'navbar.html.twig' %} 
+    {% include 'sidebar.html.twig' %}
+
+    <div class="be-content">
+        <div class="page-head">
+            <a href="{{ path('fields_create') }}" class="btn btn-space btn-primary btn-lg pull-right">
+                <span class="icon mdi mdi-nature"></span> {% trans %}Add New Farm{% endtrans %}
+            </a>
+            <h2 class="page-head-title">{% trans %}All Farms/Greenhouses{% endtrans %}</h2>
+        </div>
+        <div class="main-content container-fluid">
+            <div class="row">
+            {% for field in fields %}
+                <div class="col-xs-12 col-md-3">
+                    <div class="user-display">
+                        {% if vich_uploader_asset(field, 'imageFile') %}
+                        <div class="user-display-bg" style="background-image: url('{{ vich_uploader_asset(field, 'imageFile') }}');"></div>
+                        {% endif %}
+                        <div class="user-display-bottom">
+                            <div class="user-display-info">
+                                <div class="name"><a href="{{ path('fields_show', {'id': field.id }) }}">{{ field.name }}</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% include 'right-sidebar.html.twig' %}
+</div>
+{% endblock %}

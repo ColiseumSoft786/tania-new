@@ -1,0 +1,122 @@
+imports:
+    #- { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: services.yml }
+    - { resource: repository.yml }
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+#parameters:
+#    locale: en
+
+framework:
+    #esi: ~
+    translator: { fallbacks: ['%env(SYMFONY_LOCALE)%'] }
+    secret: '%env(SYMFONY_SECRET)%'
+    router:
+        resource: '%kernel.project_dir%/app/config/routing.yml'
+        strict_requirements: ~
+    form: ~
+    csrf_protection: ~
+    validation: { enable_annotations: true }
+    #serializer: { enable_annotations: true }
+    templating:
+        engines: ['twig']
+    default_locale: '%env(SYMFONY_LOCALE)%'
+    trusted_hosts: ~
+    session:
+        # http://symfony.com/doc/current/reference/configuration/framework.html#handler-id
+        handler_id: session.handler.native_file
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+    fragments: ~
+    http_method_override: true
+    assets: ~
+    php_errors:
+        log: true
+
+# Twig Configuration
+twig:
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver: pdo_mysql
+        host: '%env(SYMFONY_DB_HOST)%'
+        port: '%env(SYMFONY_DB_PORT)%'
+        dbname: '%env(SYMFONY_DB_NAME)%'
+        user: '%env(SYMFONY_DB_USERNAME)%'
+        password: '%env(SYMFONY_DB_PASSWORD)%'
+        charset: utf8mb4
+        # if using pdo_sqlite as your database driver:
+        #   1. add the path in parameters.yml
+        #     e.g. database_path: "%kernel.project_dir%/var/data/data.sqlite"
+        #   2. Uncomment database_path in parameters.yml.dist
+        #   3. Uncomment next line:
+        #path: '%database_path%'
+        options:
+            1002: "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))"
+
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+        entity_managers:
+            default:
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                auto_mapping: true
+                dql:
+                    string_functions:
+                        ANY_VALUE: AppBundle\DoctrineExtensions\Utils\AnyValue
+
+# Migrations configuration
+doctrine_migrations:
+    dir_name: "%kernel.root_dir%/DoctrineMigrations"
+    namespace: Tania\Migrations
+    table_name: migration_versions
+    name: Tania Migrations
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: '%env(SYMFONY_MAILER_TRANSPORT)%'
+    host: '%env(SYMFONY_MAILER_HOST)%'
+    username: '%env(SYMFONY_MAILER_USERNAME)%'
+    password: '%env(SYMFONY_MAILER_PASSWORD)%'
+    spool: { type: memory }
+
+fos_user:
+    db_driver: orm # other valid values are 'mongodb' and 'couchdb'
+    firewall_name: main
+    user_class: AppBundle\Entity\User
+    from_email:
+        address: "%env(SYMFONY_MAILER_FROM_ADDRESS)%"
+        sender_name: "%env(SYMFONY_MAILER_SENDER_NAME)%"
+    registration:
+        form:
+            type: AppBundle\Form\RegistrationFormType
+
+vich_uploader:
+    db_driver: orm
+    mappings:
+        field_image:
+            uri_prefix: /uploads/fields
+            upload_destination: '%kernel.root_dir%/../web/uploads/fields'
+            namer: vich_uploader.namer_uniqid
+            inject_on_load: false
+            delete_on_update: true
+            delete_on_remove: true
+        
+        area_image:
+            uri_prefix: /uploads/areas
+            upload_destination: '%kernel.root_dir%/../web/uploads/areas'
+            namer: vich_uploader.namer_uniqid
+            inject_on_load: false
+            delete_on_update: true
+            delete_on_remove: true
+        
+        seed_image:
+            uri_prefix: /uploads/seeds
+            upload_destination: '%kernel.root_dir%/../web/uploads/seeds'
+            namer: vich_uploader.namer_uniqid
+            inject_on_load: false
+            delete_on_update: true
+            delete_on_remove: true

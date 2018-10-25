@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{% trans_default_domain "dashboard" %}
+<div class="be-wrapper">
+    {% include 'navbar.html.twig' %} 
+    {% include 'sidebar.html.twig' %}
+
+    <div class="be-content">
+        <div class="page-head">
+            <h2 class="page-head-title">{% trans %}Add New Zone{% endtrans %}</h2>
+        </div>
+        <div class="main-content container-fluid">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            {{ form_start(form) }}
+                                {{ form_errors(form) }}
+                                <div class="form-group">
+                                    {{ form_label(form.name, 'Name (0/50 chars)', {'label_attr': {'id': 'label_area_name'}}) }}
+                                    {{ form_errors(form.name) }}
+                                    {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form_label(form.reservoir) }}
+                                    {{ form_errors(form.reservoir) }}
+                                    {{ form_widget(form.reservoir, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form_label(form.growingMethod) }}
+                                    {{ form_errors(form.growingMethod) }}
+                                    {{ form_widget(form.growingMethod, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            {{ form_label(form.capacity) }}
+                                            {{ form_errors(form.capacity) }}
+                                            {{ form_widget(form.capacity, {'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                        <div class="col-md-6">
+                                            {{ form_label(form.measurementUnit) }}
+                                            {{ form_errors(form.measurementUnit) }}
+                                            {{ form_widget(form.measurementUnit, {'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    {{ form_label(form.imageFile) }}
+                                    {{ form_errors(form.imageFile) }}
+                                    {{ form_widget(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="">Total Area({{ unit }} Square): {{ total }}</label><br>
+                                            <label for="">Remaining ({{ unit }} Square): {{ remaining }}</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="">Width</label>
+                                            <input type="number" onkeyup="calculate()" id="width" name="width"  class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="">Height</label>
+                                            <input type="number" onkeyup="calculate()" id="height" name="height" class="form-control">
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label for="">Unit</label>
+                                            <input type="hidden" name="unit" value="{{ unit }}">
+                                            <select disabled class="form-control">
+                                                <option value="Meters" {% if unit == 'Meters' %}selected{% endif %}>Meters</option>
+                                                <option value="Acre" {% if unit == 'Acre' %}selected{% endif %}>Acre</option>
+                                                <option value="Hectare" {% if unit == 'Hectare' %}selected{% endif %}>Hectare</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label id="calculation"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary btn-lg'}}) }}
+                                        <a href="{{ path('areas',{ar: ar}) }}" class="btn btn-default btn-lg">{% trans %}Cancel{% endtrans %}</a>
+                                    </div>
+                                </div>
+                            {{ form_end(form) }}
+
+                            <script>
+                                var check = false;
+                                function calculate(){
+                                    var w = $('#width').val();
+                                    var h = $('#height').val();
+                                    if (w != '' && h != ''){
+                                        var r = w * h;
+                                        $('#calculation').html('Your Required Area: ' + r);
+                                        if(r > {{ remaining }}){
+                                            $('#calculation').append('<div class="alert alert-danger">You cant add these dimensions !</div>');
+                                            check = true;
+                                        }else{
+                                            check = false;
+                                        }
+                                    }
+                                }
+                                $('form').submit(function (e) {
+                                    if(check){
+                                        e.preventDefault();
+                                    }
+                                })
+                            </script>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'right-sidebar.html.twig' %}
+</div>
+{% endblock %}

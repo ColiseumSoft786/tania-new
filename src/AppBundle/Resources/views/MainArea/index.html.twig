@@ -1,0 +1,55 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Areas{% endblock %}
+
+{% block body %}
+    {% trans_default_domain "dashboard" %}
+    <div class="be-wrapper">
+    {% include 'navbar.html.twig' %}
+    {% include 'sidebar.html.twig' %}
+
+    <div class="be-content">
+        <div class="page-head">
+            <a href="" class="btn btn-space btn-primary btn-lg pull-right"><span class="icon mdi mdi-layers"></span> {% trans %}Add Area{% endtrans %}</a>
+            <h2 class="page-head-title">{% trans %}All Areas{% endtrans %}</h2>
+        </div>
+        <div class="main-content container-fluid">
+            <div class="row">
+                <div class="jumbotron">
+                    {% set index = 1 %}
+                    <table class="table table-hover table-striped">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Image</th>
+                            <th>Area Name</th>
+                            <th>Height</th>
+                            <th>Width</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in areas %}
+                            <tr>
+                                <td style="vertical-align: middle">{{ index }}</td>
+                                <td><img src="{{ asset(item.image) }}" width="50" height="50" alt=""></td>
+                                <td style="vertical-align: middle">{{ item.name }}</td>
+                                <td style="vertical-align: middle">{{ item.height }} {{ item.unit }}</td>
+                                <td style="vertical-align: middle">{{ item.width }} {{ item.unit }}</td>
+                                <td style="vertical-align: middle"><a href="{{ path('mainarea_edit',{id: item.id}) }}" class="badge badge-warning"><span class="icon mdi mdi-edit"></span></a></td>
+                                <td style="vertical-align: middle"><a href="{{ path('areas',{'ar' : item.id}) }}" class="btn btn-space btn-primary btn-sm"><i class="icon mdi mdi-view-dashboard"></i> &nbsp; Sub Zones</a></td>
+                            </tr>
+                            {% set index = index + 1 %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+    {% include 'right-sidebar.html.twig' %}
+    </div>{% endblock %}

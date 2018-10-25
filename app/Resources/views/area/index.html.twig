@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{% trans_default_domain "dashboard" %}
+<div class="be-wrapper">
+    {% include 'navbar.html.twig' %} 
+    {% include 'sidebar.html.twig' %}
+
+    <div class="be-content">
+        <div class="page-head">
+            <a href="{{ path('areas_create',{ar: ar}) }}" class="btn btn-space btn-primary btn-lg pull-right"><span class="icon mdi mdi-layers"></span> {% trans %}Add Zone{% endtrans %}</a>
+            <h2 class="page-head-title">{% trans %}All Zones{% endtrans %}</h2>
+        </div>
+        <div class="main-content container-fluid">
+            <div class="row">
+            {% set index = 0 %}
+            {% for area in areas %}
+                <div class="col-xs-12 col-md-3">
+                    <div class="user-display">
+                        {% if vich_uploader_asset(area, 'imageFile') %}
+                            <img src="{{ vich_uploader_asset(area, 'imageFile') }}" style="width: 100%" alt="">
+
+                            {#<div class="user-display-bg" style="background-image: url('{{ vich_uploader_asset(area, 'imageFile') }}');"></div>#}
+                        {% endif %}
+                        <div class="user-display-bottom">
+                            <div class="user-display-info">
+                                <div class="name"><a href="{{ path('areas_show', {'id': area.id,'ar': ar}) }}">{{area.name}}</a></div>
+                                {% if area.reservoir is not null %}
+                                    <div class="nick">{{ area.reservoir.name }}</div>
+
+                                {% endif %}
+                                {# This field is basically Main Area Object #}
+                                <div class="nick"><strong>Area:</strong> <span class="pull-right">{{ area.mainarea.name }}</span></div>
+
+                            </div>
+                            <div class="row user-display-details">
+                                <div class="col-xs-6">
+                                    <div class="title">{% trans %}System{% endtrans %}</div>
+                                    <div class="counter">
+                                        {{ growingMethods[index] }}
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="title">{% trans %}Capacity{% endtrans %}</div>
+                                    <div class="counter">
+                                        {{ area.capacity }}&nbsp;{{ measurementUnits[index] }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% set index = index + 1 %}
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% include 'right-sidebar.html.twig' %}
+</div>
+{% endblock %}

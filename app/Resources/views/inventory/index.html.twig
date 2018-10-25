@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{% trans_default_domain "dashboard" %}
+<div class="be-wrapper">
+    {% include 'navbar.html.twig' %} 
+    {% include 'sidebar.html.twig' %}
+
+    <div class="be-content">
+        <div class="page-head">
+            <div class="pull-right">
+                <a href="{{ path('seeds_create') }}" class="btn btn-space btn-success btn-lg"><i class="icon mdi mdi-plus"></i> {% trans %}Add Seed{% endtrans %}</a>
+            </div>
+            <h2 class="page-head-title">{% trans %}Inventories{% endtrans %}</h2>
+        </div>
+        
+        <div class="main-content container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-default panel-table">
+                        <div class="panel-heading">{% trans %}Seeds Collection{% endtrans %}
+                            <div class="tools"></div>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>{% trans %}Name of Plant Variety{% endtrans %}</th>
+                                        <th>{% trans %}Category{% endtrans %}</th>
+                                        <th>{% trans %}Expired In{% endtrans %}</th>
+                                        <th>{% trans %}Stock{% endtrans %}</th>
+                                        <th>{% trans %}Country of Origin{% endtrans %}</th>
+                                        <th>{% trans %}Action{% endtrans %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for seed in seeds %}
+                                    <tr>
+                                        <td class="inventory-image cell-detail user-info">
+                                            {% if vich_uploader_asset(seed, 'imageFile') %}
+                                            <img src="{{ vich_uploader_asset(seed, 'imageFile') }}" alt="{{ seed.name }}">
+                                            {% else %}
+                                            <img src="{{ asset('assets/img/favicon.png') }}" alt="{{ seed.name }}"> 
+                                            {% endif %}
+                                            {{ seed.name }}
+                                            <span class="cell-detail-description">{{ seed.producerName }}</span>
+                                        </td>
+                                        <td>{{ seed.seedCategory.name }}</td>
+                                        <td>
+                                            {{ seed.expirationMonth }} {{ seed.expirationYear }}
+                                        </td>
+                                        <td>
+                                            {% if seed.measurementUnit == 1 %}
+                                                {{ seed.quantity }} seeds
+                                            {% elseif seed.measurementUnit == 2 %}
+                                                {{ seed.quantity }} gr
+                                            {% elseif seed.measurementUnit == 3 %}
+                                                {{ seed.quantity }} kg
+                                            {% elseif seed.measurementUnit == 4 %}
+                                                {{ seed.quantity }} lbs
+                                            {% elseif seed.measurementUnit == 5 %}
+                                                {{ seed.quantity }} oz
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ seed.originCountry }}
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('seeds_show', {'id': seed.id }) }}">{% trans %}Edit{% endtrans %}</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'right-sidebar.html.twig' %}
+</div>
+{% endblock %}

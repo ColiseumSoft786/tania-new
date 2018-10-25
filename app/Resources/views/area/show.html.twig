@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{% trans_default_domain "dashboard" %}
+<div class="be-wrapper">
+    {% include 'navbar.html.twig' %} 
+    {% include 'sidebar.html.twig' %}
+
+    <div class="be-content">
+        <div class="page-head">
+            <a href="{{ path('areas_edit', {'id': area.id,'ar' : ar}) }}" class="btn btn-space btn-primary btn-lg pull-right"><span class="icon mdi mdi-layers"></span> {% trans %}Edit Zone{% endtrans %}</a>
+            <h2 class="page-head-title">{{ area.name }}</h2>
+        </div>
+        
+        <div class="main-content container-fluid">
+            <div class="user-profile">
+                <div class="row">
+                    <div class="col-md-5">
+                        {% if vich_uploader_asset(area, 'imageFile') %}
+                        <div class="user-display">
+                            <img src="{{ vich_uploader_asset(area, 'imageFile') }}" style="width: 100%" alt="">
+                            {#<div class="user-display-bg" style="background-image: url('{{ vich_uploader_asset(area, 'imageFile') }}');"></div>#}
+                        </div>
+                        {% endif %}
+                        <div class="user-info-list panel panel-default">
+                            <div class="panel-body">
+                                <table class="no-border no-strip skills">
+                                    <tbody class="no-border-x no-border-y">
+                                        <tr>
+                                            <td class="icon"><span class="mdi mdi-toys"></span></td>
+                                            <td class="item">{% trans %}System{% endtrans %}<span class="icon s7-portfolio"></span></td>
+                                            <td>{{ growingMethod }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="icon"><span class="mdi mdi-gradient"></span></td>
+                                            <td class="item">{% trans %}Capacity{% endtrans %}<span class="icon s7-gift"></span></td>
+                                            <td>
+                                            <div class="progress">
+                                                {% set percentage = current_capacities / area.capacity * 100 %}
+                                                <div style="width: {{ percentage }}%" class="progress-bar progress-bar-primary">{{ current_capacities }} / {{ area.capacity }}</div>
+                                            </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="icon"><span class="mdi mdi-flower-alt"></span></td>
+                                            <td class="item">{% trans %}Plant Variety{% endtrans %}</td>
+                                            <td>{{ total_varieties }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="icon"><span class="mdi mdi-drink"></span></td>
+                                            <td class="item">{% trans %}Nutrient Reservoir{% endtrans %}</td>
+                                            <td>{% if area.reservoir is not null %}{{ area.reservoir.name }}{% else %}&nbsp;{% endif %}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="panel panel-default panel-table">
+                            <div class="panel-heading">{% trans %}Plants in{% endtrans %} {{ area.name }}
+                            <div class="tools"><a href="{{ path('plants_create') }}" class="btn btn-default btn-xs"><span class="icon mdi mdi-plus"> </span> {% trans %}Add plants{% endtrans %}</a></div>
+                            </div>
+
+                            <div class="panel-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:47%;">{% trans %}Variety Name{% endtrans %}</th>
+                                            <th style="width:38%;">{% trans %}Type{% endtrans %}</th>
+                                            <th>{% trans %}Amount{% endtrans %}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for plant in plants %}
+                                        <tr>
+                                            <td class="user-avatar">
+                                                {% if vich_uploader_asset(plant['seed'], 'imageFile', 'AppBundle\\Entity\\Seed') %}
+                                                <img src="{{ vich_uploader_asset(plant['seed'], 'imageFile', 'AppBundle\\Entity\\Seed') }}" alt="{{ plant['seed'].name }}">
+                                                {% else %}
+                                                <img src="{{ asset('assets/img/favicon.png') }}" alt="{{ plant['seed'].name }}">
+                                                {% endif %}
+                                                {{ plant['seed'].name }}
+                                            </td>
+                                            <td style="vertical-align: middle;">{{ plant['seed_category'] }}</td>
+                                            <td style="vertical-align: middle;">{{ plant['seedling_amount'] }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'right-sidebar.html.twig' %}
+</div>
+{% endblock %}
